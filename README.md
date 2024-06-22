@@ -29,7 +29,7 @@ This section outlines how to set up and run the frontend code repository for the
    ```
 
 ## Configuration
-1. **Create a google clientid  in console.cloud.google.com**
+1. **Create a google clientid  in [this link](console.cloud.google.com)**
 2. **Add into your GoogleAuthProvider component in index.js**
 
 ## Running the application
