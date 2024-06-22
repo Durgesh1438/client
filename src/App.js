@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
-
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import './App.css'
+import Login from './Login/login';
+import Home from './components/home';
+import { useUsername } from './globalstate/globalstate';
 function App() {
+  const {user,setUser}=useUsername()
+  const [isLoggedIn,setisLoggedIn]=useState(()=>{
+    return sessionStorage.getItem('isLoggedIn')==='true'
+  })
+  useEffect(()=>{
+    sessionStorage.setItem('isLoggedIn',isLoggedIn)
+    const email=sessionStorage.getItem('Email')
+    setUser(()=>{
+      return {...user,Email:email}
+    })
+  },[isLoggedIn])
+  
+  const handlelogin=()=>{
+    setisLoggedIn(true)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+        <Routes>
+          <Route path="/login" element={isLoggedIn?<Home />:<Login onLogin={handlelogin}/>} />
+          <Route path="/home"  element={isLoggedIn?<Home />:<Login onLogin={handlelogin}/>} />
+          
+          <Route path="/" element={isLoggedIn?<Home />:<Login onLogin={handlelogin}/>} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+    </Router>
+  )
 }
 
 export default App;
